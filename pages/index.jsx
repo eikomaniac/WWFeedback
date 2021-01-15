@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import {
   Button, Text, Center, ButtonGroup, PinInput, PinInputField, HStack, useToast,
 } from '@chakra-ui/react';
@@ -11,9 +12,18 @@ export default function Home() {
   const [loadingSession, setLoadingSession] = useState(false);
   const toast = useToast();
 
-  const onJoinCodeEntered = (code) => {
+  const onJoinCodeEntered = async (code) => {
     setLoadingSession(true);
-    setTimeout(() => { // ! DUMMY TIMEOUT -- REPLACE WITH API IN FUTURE
+
+    try {
+      await axios.get('/api/sessions', {
+        params: {
+          id: code,
+        },
+      });
+
+      console.log('success'); // ! Change later
+    } catch (err) {
       toast({
         title: (<>
           <i>{`${code} `}</i>
@@ -23,13 +33,14 @@ export default function Home() {
         status: 'error',
         isClosable: true,
       });
-      setLoadingSession(false);
-    }, 500);
+    }
+
+    setLoadingSession(false);
   };
 
   return (
-    <Layout>
-      <div style={{ display: 'grid', placeItems: 'center', height: '90vh' }}>
+    <Layout title={pageView === 'home' ? undefined : `${pageView.charAt(0).toUpperCase() + pageView.slice(1)} Session`}>
+      <div className="container" style={{ display: 'grid', placeItems: 'center', height: '90vh' }}>
         {pageView === 'home' && (
           <div>
             <Text

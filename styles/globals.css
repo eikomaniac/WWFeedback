@@ -1,6 +1,7 @@
 /* Prevent FOUC as much as possible */
 html,
-body {
+body,
+div.container {
   background-color: #1A202C;
   color: #1A202C,
 }
