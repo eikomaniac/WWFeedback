@@ -76,7 +76,7 @@ export default function Home() {
             <Text color="gray.500" textAlign="center">
               Please enter the session code below
               <br />
-              <Button paddingBottom="10px" isLoading={loadingSession} variant="ghost" />
+              <Button style={{ cursor: 'default' }} paddingBottom="10px" isLoading={loadingSession} variant="ghost" disabled />
             </Text>
             <Center>
               <HStack>
