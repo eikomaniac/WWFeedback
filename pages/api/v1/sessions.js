@@ -28,6 +28,8 @@ export default async (req, res) => {
     // Get a list of all existing sessions
     const allSessions = await prisma.session.findMany();
     return res.status(200).json({ sessions: allSessions });
+  } if (method === 'DELETE') {
+    // * Delete code here (if Host ends session early)
   }
 
   return res.status(400).json({}); // Bad request

@@ -16,7 +16,7 @@ export default function Home() {
     setLoadingSession(true);
 
     try {
-      await axios.get('/api/sessions', {
+      await axios.get('/api/v1/sessions', {
         params: {
           id: code,
         },
