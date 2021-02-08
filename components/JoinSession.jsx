@@ -5,6 +5,8 @@ import {
 } from '@chakra-ui/react';
 import { AiOutlineLeft } from 'react-icons/ai';
 
+import Title from './Title';
+
 export default function JoinSession({
   setPageView,
 }) {
@@ -42,14 +44,7 @@ export default function JoinSession({
       <Button size="sm" leftIcon={<AiOutlineLeft />} variant="ghost" color="grey" onClick={() => setPageView('home')}>
         Back
       </Button>
-      <Text
-        bgGradient="linear(to-l, #7928CA,#FF0080)"
-        bgClip="text"
-        fontSize="6xl"
-        fontWeight="extrabold"
-      >
-        Join Session
-      </Text>
+      <Title title="Join Session" />
       <Text color="gray.500" textAlign="center">
         Please enter the session code below
         <br />
