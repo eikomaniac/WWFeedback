@@ -10,12 +10,12 @@ import JoinSession from '../components/JoinSession';
 import CreateSession from '../components/CreateSession';
 
 export default function Home() {
-  const [pageView, setPageView] = useState('create');
+  const [pageView, setPageView] = useState('home');
 
   return (
     <Layout title={pageView === 'home' ? undefined : `${pageView.charAt(0).toUpperCase() + pageView.slice(1)} Session`}>
       {['home', 'join'].includes(pageView) && (
-        <div className="container" style={{ display: 'grid', placeItems: 'center', height: '85vh' }}>
+        <div style={{ display: 'grid', placeItems: 'center', height: '85vh' }}>
           {pageView === 'home' && (
             <div>
               <Title title="WWFeedback" style={{ paddingBottom: 25 }} />
