@@ -13,6 +13,11 @@ import {
   Textarea,
   Menu,
   MenuButton,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
   MenuList,
   MenuItem,
 } from '@chakra-ui/react';
@@ -32,7 +37,7 @@ const placeholderQuestion = {
   required: false,
 };
 
-export default function CreateSession({
+export default function CreateEvent({
   setPageView,
 }) {
   const [template, setTemplate] = useState({
@@ -43,6 +48,7 @@ export default function CreateSession({
   });
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [tabs, setTabs] = useState(['1']);
 
   const onReaderLoad = (e) => {
     const obj = JSON.parse(e.target.result);
@@ -79,42 +85,65 @@ export default function CreateSession({
           >
             Back
           </Button>
-          <Title title="Create Session" style={{ maxWidth: 427 }} />
+          <Title title="Create Event" style={{ maxWidth: 427 }} />
         </div>
       </Center>
       <SimpleGrid columns={{ sm: 1, lg: 2 }} spacing="20px">
         <Box ml="20px">
-          {template?.questions?.map((question, questionNo) => (<QuestionTemplate template={template} setTemplate={setTemplate} question={question} questionNo={questionNo} />))}
-          <Button
-            colorScheme="green"
-            leftIcon={<FaPlus />}
-            isLoading={false}
-            type="submit"
-            onClick={() => {
-              const temp = { ...template };
-              temp.questions.push({ ...placeholderQuestion });
-              setTemplate(temp);
-            }}
-          >
-            Question
-          </Button>
+          <Tabs>
+            <TabList>
+              {tabs.map((tab) => <Tab>{tab}</Tab>)}
+              <Tab onClick={() => setTabs((t) => [...t, t.length + 1])}>+</Tab>
+            </TabList>
+
+            <TabPanels>
+              {tabs.map(() => (
+                <TabPanel>
+                  {template?.questions?.map((question, questionNo) => (<QuestionTemplate template={template} setTemplate={setTemplate} question={question} questionNo={questionNo} />))}
+                  <Button
+                    colorScheme="green"
+                    leftIcon={<FaPlus />}
+                    isLoading={false}
+                    type="submit"
+                    onClick={() => {
+                      const temp = { ...template };
+                      temp.questions.push({ ...placeholderQuestion });
+                      setTemplate(temp);
+                    }}
+                  >
+                    Question
+                  </Button>
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
         </Box>
         <Box mr="20px" padding="10px">
+          <Menu>
+            <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+              Session
+            </MenuButton>
+            <MenuList>
+              {['Session', 'Series', 'Project'].map((type, index) => (
+                <MenuItem key={index}>{type}</MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
           <Input
             size="lg"
-            placeholder="Session Title"
+            placeholder="Event Title"
             variant="flushed"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <Textarea
             variant="filled"
-            placeholder="Session Description"
+            placeholder="Event Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
           <Menu>
-            <MenuButton marginLeft="10px" as={Button} rightIcon={<BsChevronDown />}>
+            <MenuButton as={Button} rightIcon={<BsChevronDown />}>
               Template
             </MenuButton>
             <MenuList>
@@ -128,6 +157,10 @@ export default function CreateSession({
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content */}
           <a id="export-template" style={{ display: 'none' }} />
           <Button variant="outline" onClick={() => exportTemplate()}>Export</Button>
+          <br />
+          <Button colorScheme="teal" variant="solid">
+            Schedule Event
+          </Button>
         </Box>
       </SimpleGrid>
     </div>

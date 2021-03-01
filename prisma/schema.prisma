@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Session { // Change later (discuss with team!)
+model Event { // Change later (discuss with team!)
   id        String   @id
   createdAt DateTime @default(now())
   title     String

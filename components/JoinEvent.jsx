@@ -7,17 +7,17 @@ import { AiOutlineLeft } from 'react-icons/ai';
 
 import Title from './Title';
 
-export default function JoinSession({
+export default function JoinEvent({
   setPageView,
 }) {
-  const [loadingSession, setLoadingSession] = useState(false);
+  const [loadingEvent, setLoadingEvent] = useState(false);
   const toast = useToast();
 
   const onJoinCodeEntered = async (code) => {
-    setLoadingSession(true);
+    setLoadingEvent(true);
 
     try {
-      await axios.get('/api/v1/sessions', {
+      await axios.get('/api/v1/events', {
         params: {
           id: code,
         },
@@ -28,7 +28,7 @@ export default function JoinSession({
       toast({
         title: (<>
           <i>{`${code} `}</i>
-          is not a valid session code.
+          is not a valid event code.
         </>),
         description: 'Please try again.',
         status: 'error',
@@ -36,7 +36,7 @@ export default function JoinSession({
       });
     }
 
-    setLoadingSession(false);
+    setLoadingEvent(false);
   };
 
   return (
@@ -44,15 +44,15 @@ export default function JoinSession({
       <Button size="sm" leftIcon={<AiOutlineLeft />} variant="ghost" color="grey" onClick={() => setPageView('home')}>
         Back
       </Button>
-      <Title title="Join Session" />
+      <Title title="Join Event" />
       <Text color="gray.500" textAlign="center">
-        Please enter the session code below
+        Please enter the event code below
         <br />
-        <Button style={{ cursor: 'default' }} paddingBottom="10px" isLoading={loadingSession} variant="ghost" disabled />
+        <Button style={{ cursor: 'default' }} paddingBottom="10px" isLoading={loadingEvent} variant="ghost" disabled />
       </Text>
       <Center>
         <HStack>
-          <PinInput autoFocus size="lg" isDisabled={loadingSession} onComplete={onJoinCodeEntered}>
+          <PinInput autoFocus size="lg" isDisabled={loadingEvent} onComplete={onJoinCodeEntered}>
             <PinInputField />
             <PinInputField />
             <PinInputField />
