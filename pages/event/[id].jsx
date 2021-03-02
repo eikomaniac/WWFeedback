@@ -124,7 +124,7 @@ export default function Home() {
                 <Button colorScheme="blue" mr={3} onClick={() => setTechIssueModal(false)}>
                   Send Issue
                 </Button>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline" onClick={() => setTechIssueModal(false)}>Cancel</Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
