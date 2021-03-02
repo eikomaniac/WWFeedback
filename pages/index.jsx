@@ -3,17 +3,17 @@ import {
   Button, Center, ButtonGroup,
 } from '@chakra-ui/react';
 import { IoCreateOutline, IoEnterOutline } from 'react-icons/io5';
-import Layout from '../components/Layout';
 
+import Layout from '../components/Layout';
 import Title from '../components/Title';
-import JoinSession from '../components/JoinSession';
-import CreateSession from '../components/CreateSession';
+import JoinEvent from '../components/JoinEvent';
+import CreateEvent from '../components/CreateEvent';
 
 export default function Home() {
   const [pageView, setPageView] = useState('home');
 
   return (
-    <Layout title={pageView === 'home' ? undefined : `${pageView.charAt(0).toUpperCase() + pageView.slice(1)} Session`}>
+    <Layout title={pageView === 'home' ? undefined : `${pageView.charAt(0).toUpperCase() + pageView.slice(1)} Event`}>
       {['home', 'join'].includes(pageView) && (
         <div style={{ display: 'grid', placeItems: 'center', height: '85vh' }}>
           {pageView === 'home' && (
@@ -27,10 +27,10 @@ export default function Home() {
               </Center>
             </div>
           )}
-          {pageView === 'join' && <JoinSession setPageView={setPageView} />}
+          {pageView === 'join' && <JoinEvent setPageView={setPageView} />}
         </div>
       )}
-      {pageView === 'create' && <CreateSession setPageView={setPageView} />}
+      {pageView === 'create' && <CreateEvent setPageView={setPageView} />}
     </Layout>
   );
 }
