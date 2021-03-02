@@ -1,44 +1,47 @@
 import { useState } from 'react';
 import {
-  Box, Center, SimpleGrid, Text,
+  Box, Center, SimpleGrid, Text, Tabs, Button, Tab, TabPanel, TabPanels, TabList, Select,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import { Line } from 'react-chartjs-2';
+import { FaPlus } from 'react-icons/fa';
 import {
   CgSmileMouthOpen, CgSmile, CgSmileNeutral, CgSmileSad,
 } from 'react-icons/cg';
+import { GoAlert } from 'react-icons/go';
 import { BiSad } from 'react-icons/bi';
 
 import Layout from '../../components/Layout';
+import Question from '../../components/Question';
 
-const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      fill: false,
-      lineTension: 0.1,
-      backgroundColor: 'rgba(75,192,192,0.4)',
-      borderColor: 'rgba(75,192,192,1)',
-      borderCapStyle: 'butt',
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: 'miter',
-      pointBorderColor: 'rgba(75,192,192,1)',
-      pointBackgroundColor: '#fff',
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-      pointHoverBorderColor: 'rgba(220,220,220,1)',
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10,
-      data: [65, 59, 80, 81, 56, 55, 40],
-    },
-  ],
+const placeholderQuestion = {
+  type: 'input',
+  label: '',
+  placeholder: '',
+  optionGroup: [''],
+  sliderGroup: ['', '', ''],
+  helper: '',
+  required: false,
 };
 
 export default function Home() {
   const [selectedMood, setSelectedMood] = useState();
+  const [tabs, setTabs] = useState(['1']);
+  const [techIssueModal, setTechIssueModal] = useState(false);
+
+  const [template, setTemplate] = useState({
+    title: '',
+    questions: [
+      { ...placeholderQuestion },
+    ],
+  });
+
   const sendMood = (moodScore) => {
     setSelectedMood(moodScore);
   };
@@ -57,16 +60,6 @@ export default function Home() {
         </Text>
       </Center>
       <Box margin="10px" borderRadius="lg" bg="#2D3748" padding="10px">
-        <Text
-          bgGradient="linear(to-l, #7928CA,#FF0080)"
-          bgClip="text"
-          fontSize="25px"
-          fontWeight="extrabold"
-        >
-          Surveys
-        </Text>
-      </Box>
-      <Box margin="10px" borderRadius="lg" bg="#2D3748" padding="10px">
         <Center>
           <Text
             bgGradient="linear(to-l, #7928CA,#FF0080)"
@@ -79,13 +72,64 @@ export default function Home() {
           </Text>
         </Center>
         <Center>
-          <BiSad color="red" fontSize="100px" style={{ cursor: 'pointer', opacity: selectedMood === -1 ? 1 : 0.5 }} onClick={() => sendMood(-1)} />
-          <CgSmileSad color="#ff3300" fontSize="100px" style={{ cursor: 'pointer', opacity: selectedMood === -0.5 ? 1 : 0.5 }} onClick={() => sendMood(-0.5)} />
-          <CgSmileNeutral color="yellow" fontSize="100px" style={{ cursor: 'pointer', opacity: selectedMood === 0 ? 1 : 0.5 }} onClick={() => sendMood(0)} />
-          <CgSmile color="#66ff66" fontSize="100px" style={{ cursor: 'pointer', opacity: selectedMood === 0.5 ? 1 : 0.5 }} onClick={() => sendMood(0.5)} />
-          <CgSmileMouthOpen color="lime" fontSize="100px" style={{ cursor: 'pointer', opacity: selectedMood === 1 ? 1 : 0.5 }} onClick={() => sendMood(1)} />
+          <BiSad color="red" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, -1].includes(selectedMood) ? 1 : 0.5 }} onClick={() => sendMood(-1)} />
+          <CgSmileSad color="#ff3300" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, -0.5].includes(selectedMood) ? 1 : 0.5 }} onClick={() => sendMood(-0.5)} />
+          <CgSmileNeutral color="yellow" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 0].includes(selectedMood) ? 1 : 0.5 }} onClick={() => sendMood(0)} />
+          <CgSmile color="#66ff66" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 0.5].includes(selectedMood) ? 1 : 0.5 }} onClick={() => sendMood(0.5)} />
+          <CgSmileMouthOpen color="lime" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 1].includes(selectedMood) ? 1 : 0.5 }} onClick={() => sendMood(1)} />
         </Center>
       </Box>
+      <SimpleGrid columns={{ sm: 1, lg: 2 }} spacing="20px">
+        <Box margin="10px" borderRadius="lg" bg="#2D3748" padding="10px">
+          <Text
+            bgGradient="linear(to-l, #7928CA,#FF0080)"
+            bgClip="text"
+            fontSize="25px"
+            fontWeight="extrabold"
+          >
+            Surveys
+          </Text>
+          <Tabs>
+            <TabList>
+              {tabs.map((tab) => <Tab>{tab}</Tab>)}
+            </TabList>
+
+            <TabPanels>
+              {tabs.map(() => (
+                <TabPanel>
+                  {template?.questions?.map((question, questionNo) => (<Question template={template} setTemplate={setTemplate} question={question} questionNo={questionNo} />))}
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
+        </Box>
+        <Box margin="10px">
+          <Button leftIcon={<GoAlert />} colorScheme="red" onClick={() => setTechIssueModal(true)}>
+            Report Technical Issue
+          </Button>
+          <Modal isOpen={techIssueModal} onClose={() => setTechIssueModal(false)}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Report A Technical Issue</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Select placeholder="Select technical issue" size="lg">
+                  <option value="option1">Host microphone muted/not working</option>
+                  <option value="option2">Presentation not visible</option>
+                  <option value="option3">No audible sound</option>
+                </Select>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme="blue" mr={3} onClick={() => setTechIssueModal(false)}>
+                  Send Issue
+                </Button>
+                <Button variant="outline">Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </Box>
+      </SimpleGrid>
     </Layout>
   );
 }
