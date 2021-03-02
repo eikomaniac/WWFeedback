@@ -6,6 +6,8 @@ import {
 import { IoCreateOutline, IoEnterOutline } from 'react-icons/io5';
 import { AiOutlineLeft } from 'react-icons/ai';
 import Layout from '../components/Layout';
+import Attendee from '../components/Attendee';
+import Host from '../components/Host';
 
 export default function Home() {
   const [pageView, setPageView] = useState('home');
@@ -56,6 +58,8 @@ export default function Home() {
               <ButtonGroup spacing="10">
                 <Button size="lg" leftIcon={<IoEnterOutline />} onClick={() => setPageView('join')}>Join</Button>
                 <Button size="lg" leftIcon={<IoCreateOutline />} onClick={() => setPageView('create')}>Create</Button>
+                <Button size="lg" leftIcon={<IoEnterOutline />} onClick={() => setPageView('attendee')}>Attendee</Button>
+                <Button size="lg" leftIcon={<IoEnterOutline />} onClick={() => setPageView('host')}>Host</Button>
               </ButtonGroup>
             </Center>
           </div>
@@ -110,6 +114,8 @@ export default function Home() {
             </Text>
           </div>
         )}
+        {pageView === 'attendee' && <Attendee setPageView={setPageView} />}
+        {pageView === 'host' && <Host setPageView={setPageView} />}
       </div>
     </Layout>
   );
