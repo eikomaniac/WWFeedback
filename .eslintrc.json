@@ -25,6 +25,8 @@
     "react/jsx-closing-tag-location": "off",
     "react/react-in-jsx-scope": "off",
     "consistent-return": "off",
-    "max-len": "off"
+    "max-len": "off",
+    "jsx-a11y/mouse-events-have-key-events": "off",
+    "react/no-array-index-key": "off"
   }
 }
