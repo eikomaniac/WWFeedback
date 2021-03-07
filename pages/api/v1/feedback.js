@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 let {PythonShell} = require('python-shell')
-let pyshell = new PythonShell('ai/sentiment.py');
 
 export default async (req, res) => {
   const prisma = new PrismaClient({ log: ['query'] });
@@ -8,12 +7,13 @@ export default async (req, res) => {
   var analysis = "";
 
   if (method === 'POST') {
+    let pyshell = new PythonShell('ai/sentiment.py');
     pyshell.send(body.feedback);
     
     pyshell.on('message', function (message) {
       // received a message sent from the Python script (a simple "print" statement)
       console.log(message);
-      analysis = message
+      analysis = message;
     });
      
     // end the input stream and allow the process to exit
@@ -22,7 +22,7 @@ export default async (req, res) => {
       console.log('The exit code was: ' + code);
       console.log('The exit signal was: ' + signal);
       console.log('finished');
-      return res.status(200).json(analysis);
+      res.status(200).json(analysis);
     });
   }
 };
