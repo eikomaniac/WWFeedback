@@ -8,8 +8,6 @@ import Layout from '../components/Layout';
 import Title from '../components/Title';
 import JoinEvent from '../components/JoinEvent';
 import CreateEvent from '../components/CreateEvent';
-import Attendee from '../components/Attendee';
-import Host from '../components/Host';
 
 export default function Home() {
   const [pageView, setPageView] = useState('home');
@@ -33,8 +31,6 @@ export default function Home() {
         </div>
       )}
       {pageView === 'create' && <CreateEvent setPageView={setPageView} />}
-      {pageView === 'attendee' && <Attendee setPageView={setPageView} />}
-      {pageView === 'host' && <Host setPageView={setPageView} />}
     </Layout>
   );
 }

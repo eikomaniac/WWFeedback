@@ -23,7 +23,7 @@ export default function JoinEvent({
         },
       });
 
-      console.log('success'); // ! Change later
+      console.log('success');
     } catch (err) {
       toast({
         title: (<>
