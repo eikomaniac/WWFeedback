@@ -1,5 +1,8 @@
+import sys, os
+os.system('pip install nltk')
+
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import sys
+
 
 analyser = SentimentIntensityAnalyzer()
 

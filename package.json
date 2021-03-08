@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "postinstall": "pip install vaderSentiment"
+    "start": "next start"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.1.4",
