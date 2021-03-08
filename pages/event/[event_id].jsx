@@ -109,10 +109,10 @@ export default function Home() {
         </Center>
         <Center>
           <CgSmileMouthOpen color="lime" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 1].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(1)} />
-          <CgSmile color="#66ff66" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 0.75].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(0.75)} />
-          <CgSmileNeutral color="yellow" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 0.5].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(0.5)} />
-          <CgSmileSad color="#ff3300" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 0.25].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(0.25)} />
-          <BiSad color="red" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 0].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(0)} />
+          <CgSmile color="#66ff66" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 0.5].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(0.5)} />
+          <CgSmileNeutral color="yellow" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, 0].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(0)} />
+          <CgSmileSad color="#ff3300" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, -0.5].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(-0.5)} />
+          <BiSad color="red" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, -1].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(-1)} />
         </Center>
       </Box>
       <SimpleGrid columns={{ sm: 1, lg: 2 }} spacing="20px">

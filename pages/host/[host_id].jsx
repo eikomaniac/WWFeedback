@@ -172,11 +172,11 @@ export default function Home() {
               </Text>
             </Center>
             <Center>
-              {mood >= 0.875 && (<CgSmileMouthOpen color="lime" fontSize="200px" />)}
-              {mood >= 0.625 && mood < 0.875 && (<CgSmile color="#66ff66" fontSize="200px" />)}
-              {mood >= 0.375 && mood < 0.625 && (<CgSmileNeutral color="yellow" fontSize="200px" />)}
-              {mood >= 0.125 && mood < 0.375 && (<CgSmileSad color="#ff3300" fontSize="200px" />)}
-              {mood < 0.125 && (<BiSad color="red" fontSize="200px" />)}
+              {mood >= 0.75 && (<CgSmileMouthOpen color="lime" fontSize="200px" />)}
+              {mood >= 0.25 && mood < 0.75 && (<CgSmile color="#66ff66" fontSize="200px" />)}
+              {mood >= -0.25 && mood < 0.25 && (<CgSmileNeutral color="yellow" fontSize="200px" />)}
+              {mood >= -0.75 && mood < -0.25 && (<CgSmileSad color="#ff3300" fontSize="200px" />)}
+              {mood < -0.75 && (<BiSad color="red" fontSize="200px" />)}
             </Center>
           </Box>
         </SimpleGrid>
