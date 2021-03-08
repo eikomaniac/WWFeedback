@@ -89,7 +89,8 @@ export default function Layout({
         <Input
           style={{ color: '#a9a9a9' }}
           placeholder={question.placeholder}
-          onChange={(e) => updateTemplate(e.target.value, questionNo, 'placeholder')}
+          value={question.answer}
+          onChange={(e) => updateTemplate(e.target.value, questionNo, 'answer')}
         />
       )}
       {question.type === 'radio' && (
