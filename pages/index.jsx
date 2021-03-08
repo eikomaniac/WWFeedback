@@ -25,8 +25,6 @@ export default function Home() {
                 <ButtonGroup spacing="10">
                   <Button size="lg" leftIcon={<IoEnterOutline />} onClick={() => setPageView('join')}>Join</Button>
                   <Button size="lg" leftIcon={<IoCreateOutline />} onClick={() => setPageView('create')}>Create</Button>
-                  <Button size="lg" leftIcon={<IoEnterOutline />} onClick={() => setPageView('attendee')}>Attendee</Button>
-                  <Button size="lg" leftIcon={<IoEnterOutline />} onClick={() => setPageView('host')}>Host</Button>
                 </ButtonGroup>
               </Center>
             </div>

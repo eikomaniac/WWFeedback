@@ -8,7 +8,7 @@ import { AiOutlineLeft } from 'react-icons/ai';
 export default function Host({
   setPageView,
 }) {
-  const [feedback, list] = useList('myroom', 'feedback');
+  const [feedback, list] = useList('myroom2', 'feedback2');
 
   function onCheckOff(i) {
     if (!list) return;
