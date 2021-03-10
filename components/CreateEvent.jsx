@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { FaPlus } from 'react-icons/fa';
 import {
@@ -103,10 +103,14 @@ export default function CreateEvent({
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const seriesEvents = []
-  const seriesHandler = (title, description) => {
-    seriesEvents.push({'title': title, 'description': description})
-  }
+  const [newSeriesAdded, setNewSeriesAdded] = useState(false)
+  const [seriesOfEvent, setSeriesOfEvent] = useState([])
+
+  useEffect(() => {
+    setTitle('')
+    setDescription('')
+    setStartDate(null)
+  },[newSeriesAdded, seriesOfEvent])
 
   const onReaderLoad = (e) => {
     const obj = JSON.parse(e.target.result);
@@ -131,7 +135,23 @@ export default function CreateEvent({
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const handleAdd = (someTitle, someDescription, someStartDate) => {
 
+    const isTitleEmpty = (someTitle === '')
+    const isDescriptionEmpty = (someDescription === '')
+    const isStartDateNull = (someStartDate === null)
+
+    const allGood = (!isTitleEmpty && !isDescriptionEmpty && !isStartDateNull)
+
+    if(allGood){
+      setNewSeriesAdded(!newSeriesAdded)
+      const newList = seriesOfEvent.concat({'title': someTitle, 'description':someDescription, 'date':someStartDate})
+      setSeriesOfEvent(newList)
+    }
+
+    console.log(seriesOfEvent)
+
+  }
 
   return (
     <div>
@@ -232,17 +252,27 @@ export default function CreateEvent({
           }
           {isSession && (<>
             <br /> <br />
-              <DatePicker selected={startDate} placeholderText="Choose a starting date" onChange={date => setStartDate(date)} />
+              <DatePicker selected={startDate} placeholderText="Choose a date" onChange={date => setStartDate(date)} />
               <br /> <br />
               </>
             )
           }
           {isSeries && (<>
             <br /> <br />
-            <Button colorScheme="teal" variant="solid" onClick={seriesHandler(title, description)}>
+            <DatePicker selected={startDate} placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
+            <br />
+            <Button colorScheme="teal" variant="solid" onClick={() => handleAdd(title, description, startDate)}>
               Add new event
             </Button>
             <br/> <br />
+            Current events: <br />
+            {seriesOfEvent.map((event,index) => {
+              return (
+                <div>
+                  {event.title} ---- {event.description} ---- breaks when trying to put the date?
+                </div>
+              )
+            })}
             </>
           )}
           <Menu>
