@@ -250,23 +250,35 @@ export default function CreateEvent({
           />
           {isProject && (<>
               <br /> <br />
-              <DatePicker selected={startDate} showTimeSelect placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
+              <DatePicker selected={startDate} showTimeSelect timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
               <br /> <br />
-              <DatePicker selected={endDate} showTimeSelect placeholderText="Choose an ending date " onChange={date => setEndDate(date)} />
+              <DatePicker selected={endDate} showTimeSelect timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Choose an ending date " onChange={date => setEndDate(date)} />
               <br /> <br />
               </>
             )
           }
           {isSession && (<>
             <br /> <br />
-              <DatePicker selected={startDate} showTimeSelect placeholderText="Choose a date" onChange={date => setStartDate(date)} />
+              <DatePicker selected={startDate} showTimeSelect timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Choose a date" onChange={date => setStartDate(date)} />
               <br /> <br />
               </>
             )
           }
           {isSeries && (<>
             <br /> <br />
-            <DatePicker selected={startDate} showTimeSelect placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
+            <DatePicker selected={startDate} showTimeSelect timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
             <br />
             <Button colorScheme="teal" variant="solid" onClick={() => handleAdd(title, description, startDate)}>
               Add new event
@@ -276,10 +288,12 @@ export default function CreateEvent({
             {seriesOfEvent.map((event,index) => {
               return (
                 <div>
-                  {event.title} ---- {event.description} ---- {event.date.toString()} ---- 
+                  {event.title} ---- {event.description} ---- {new Intl.DateTimeFormat('default', 
+                    {year: 'numeric', month: 'long',day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(event.date)} -----
                   <Button colorScheme="teal" variant="solid" onClick={() => handleDelete(event.title,event.description,event.startDate)}>
                     Delete this event
                   </Button>
+                  <br /><br />
                 </div>
               )
             })}
