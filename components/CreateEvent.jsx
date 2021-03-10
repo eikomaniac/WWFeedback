@@ -20,10 +20,19 @@ import {
   TabPanel,
   MenuList,
   MenuItem,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react';
-
+import {useDisclosure} from '@chakra-ui/react'
+import DatePicker from 'react-datepicker';
 import filenamify from 'filenamify';
 import QuestionTemplate from './QuestionTemplate';
+import "react-datepicker/dist/react-datepicker.css";
 
 import Title from './Title';
 
@@ -37,18 +46,67 @@ const placeholderQuestion = {
   required: false,
 };
 
+const ourTemplate = {
+    title: '',
+    questions: [
+      {
+        type: 'radio',
+        label: 'Is the content engaging?',
+        placeholder: '',
+        optionGroup: ['Yes','No'],
+        sliderGroup: ['', '', ''],
+        helper: 'Please select an option.',
+        required: true,
+      },
+      {
+        type: 'radio',
+        label: 'Are you hearing the presenter well?',
+        placeholder: '',
+        optionGroup: ['Yes','No'],
+        sliderGroup: ['', '', ''],
+        helper: 'Please select an option.',
+        required: true,
+      },
+      {
+        type: 'slider',
+        label: 'How well can you see the presented content?',
+        placeholder: '',
+        optionGroup: ['',''],
+        sliderGroup: ['Not at all', 'Can see it, but not clearly', 'Can clearly see it'],
+        helper: 'Please move the slider to indicate how well you can see the presented content.',
+        required: true,
+      },
+      {
+        type: 'input',
+        label: 'Describe the way you feel about the content.',
+        placeholder: '',
+        optionGroup: ['',''],
+        sliderGroup: ['', '', ''],
+        helper: 'Use the text area to indicate how you feel.',
+        required: true,
+      },
+    ],
+}
+
 export default function CreateEvent({
   setPageView,
 }) {
-  const [template, setTemplate] = useState({
-    title: '',
-    questions: [
-      { ...placeholderQuestion },
-    ],
-  });
+  const [template, setTemplate] = useState(ourTemplate);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tabs, setTabs] = useState(['1']);
+  const [eventType, setEventType] = useState('Session')
+
+  const [isSession, setIsSession] = useState(true);
+  const [isSeries, setIsSeries] = useState(false);
+  const [isProject, setIsProject] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const seriesEvents = []
+  const seriesHandler = (title, description) => {
+    seriesEvents.push({'title': title, 'description': description})
+  }
 
   const onReaderLoad = (e) => {
     const obj = JSON.parse(e.target.result);
@@ -70,6 +128,10 @@ export default function CreateEvent({
     anchor.setAttribute('href', dataURL);
     anchor.click();
   };
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+
 
   return (
     <div>
@@ -121,11 +183,28 @@ export default function CreateEvent({
         <Box mr="20px" padding="10px">
           <Menu>
             <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-              Session
+              {eventType}
             </MenuButton>
             <MenuList>
               {['Session', 'Series', 'Project'].map((type, index) => (
-                <MenuItem key={index}>{type}</MenuItem>
+                <MenuItem key={index} onClick={() => {
+                  setEventType(type)
+                  if(type==='Project'){
+                    setIsProject(true)
+                    setIsSeries(false)
+                    setIsSession(false)
+                  }
+                  if(type==='Session'){
+                    setIsProject(false)
+                    setIsSeries(false)
+                    setIsSession(true)
+                  }
+                  if(type==='Series'){
+                    setIsProject(false)
+                    setIsSeries(true)
+                    setIsSession(false)
+                  }
+                }}>{type}</MenuItem>
               ))}
             </MenuList>
           </Menu>
@@ -142,13 +221,40 @@ export default function CreateEvent({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          {isProject && (<>
+              <br /> <br />
+              <DatePicker selected={startDate} placeholder="Choose a starting date for the project" onChange={date => setStartDate(date)} />
+              <br /> <br />
+              <DatePicker selected={endDate} placeholder="Choose an ending date for the project" onChange={date => setEndDate(date)} />
+              <br /> <br />
+              </>
+            )
+          }
+          {isSession && (<>
+            <br /> <br />
+              <DatePicker selected={startDate} placeholder="Choose a starting date for the session" onChange={date => setStartDate(date)} />
+              <br /> <br />
+              </>
+            )
+          }
+          {isSeries && (<>
+            <br /> <br />
+            <Button colorScheme="teal" variant="solid" onClick={seriesHandler(title, description)}>
+              Add new event
+            </Button>
+            <br/> <br />
+            </>
+          )}
           <Menu>
             <MenuButton as={Button} rightIcon={<BsChevronDown />}>
               Template
             </MenuButton>
             <MenuList>
               {['General', '+ Custom'].map((type, index) => (
-                <MenuItem key={index}>{type}</MenuItem>
+                <MenuItem key={index} onClick={() => {
+                  if(index===1) setTemplate({...placeholderQuestion})
+                  if(index===0) setTemplate(ourTemplate) 
+                }}>{type}</MenuItem>
               ))}
             </MenuList>
           </Menu>
@@ -158,9 +264,26 @@ export default function CreateEvent({
           <a id="export-template" style={{ display: 'none' }} />
           <Button variant="outline" onClick={() => exportTemplate()}>Export</Button>
           <br />
-          <Button colorScheme="teal" variant="solid">
+          <Button colorScheme="teal" variant="solid" onClick={onOpen}>
             Schedule Event
-          </Button>
+          </Button>          
+          <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Your event codes</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              Host Code: 384723 <br/>
+              Attendee Code: 945855
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         </Box>
       </SimpleGrid>
     </div>
