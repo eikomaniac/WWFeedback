@@ -2,7 +2,7 @@ import { ChakraProvider, theme } from '@chakra-ui/react';
 import { RoomServiceParameters, RoomServiceProvider } from "@roomservice/react";
 import { useEffect, useState } from "react";
 import { customAlphabet, nanoid } from "nanoid";
-
+import '../styles/date-picker.css';
 import '../styles/globals.css';
 
 async function myAuthFunction(params) {

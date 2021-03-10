@@ -29,7 +29,7 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import {useDisclosure} from '@chakra-ui/react'
-import DatePicker from 'react-datepicker';
+import DatePicker from './DatePicker.tsx'
 import filenamify from 'filenamify';
 import QuestionTemplate from './QuestionTemplate';
 import "react-datepicker/dist/react-datepicker.css";
@@ -100,8 +100,8 @@ export default function CreateEvent({
   const [isSession, setIsSession] = useState(true);
   const [isSeries, setIsSeries] = useState(false);
   const [isProject, setIsProject] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const seriesEvents = []
   const seriesHandler = (title, description) => {
@@ -223,16 +223,16 @@ export default function CreateEvent({
           />
           {isProject && (<>
               <br /> <br />
-              <DatePicker selected={startDate} placeholder="Choose a starting date for the project" onChange={date => setStartDate(date)} />
+              <DatePicker selected={startDate} placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
               <br /> <br />
-              <DatePicker selected={endDate} placeholder="Choose an ending date for the project" onChange={date => setEndDate(date)} />
+              <DatePicker selected={endDate} placeholderText="Choose an ending date " onChange={date => setEndDate(date)} />
               <br /> <br />
               </>
             )
           }
           {isSession && (<>
             <br /> <br />
-              <DatePicker selected={startDate} placeholder="Choose a starting date for the session" onChange={date => setStartDate(date)} />
+              <DatePicker selected={startDate} placeholderText="Choose a starting date" onChange={date => setStartDate(date)} />
               <br /> <br />
               </>
             )
