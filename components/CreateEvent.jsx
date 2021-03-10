@@ -156,7 +156,6 @@ export default function CreateEvent({
   const handleDelete = (someTitle, someDescription, someStartDate) => {
 
     const newList = seriesOfEvent.filter(element => element.title !== someTitle)
-
     setSeriesOfEvent(newList)
 
   }
@@ -251,23 +250,23 @@ export default function CreateEvent({
           />
           {isProject && (<>
               <br /> <br />
-              <DatePicker selected={startDate} placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
+              <DatePicker selected={startDate} showTimeSelect placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
               <br /> <br />
-              <DatePicker selected={endDate} placeholderText="Choose an ending date " onChange={date => setEndDate(date)} />
+              <DatePicker selected={endDate} showTimeSelect placeholderText="Choose an ending date " onChange={date => setEndDate(date)} />
               <br /> <br />
               </>
             )
           }
           {isSession && (<>
             <br /> <br />
-              <DatePicker selected={startDate} placeholderText="Choose a date" onChange={date => setStartDate(date)} />
+              <DatePicker selected={startDate} showTimeSelect placeholderText="Choose a date" onChange={date => setStartDate(date)} />
               <br /> <br />
               </>
             )
           }
           {isSeries && (<>
             <br /> <br />
-            <DatePicker selected={startDate} placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
+            <DatePicker selected={startDate} showTimeSelect placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
             <br />
             <Button colorScheme="teal" variant="solid" onClick={() => handleAdd(title, description, startDate)}>
               Add new event
@@ -277,7 +276,7 @@ export default function CreateEvent({
             {seriesOfEvent.map((event,index) => {
               return (
                 <div>
-                  {event.title} ---- {event.description} ---- 
+                  {event.title} ---- {event.description} ---- {event.date.toString()} ---- 
                   <Button colorScheme="teal" variant="solid" onClick={() => handleDelete(event.title,event.description,event.startDate)}>
                     Delete this event
                   </Button>
