@@ -153,6 +153,14 @@ export default function CreateEvent({
 
   }
 
+  const handleDelete = (someTitle, someDescription, someStartDate) => {
+
+    const newList = seriesOfEvent.filter(element => element.title !== someTitle)
+
+    setSeriesOfEvent(newList)
+
+  }
+
   return (
     <div>
       <Center>
@@ -269,7 +277,10 @@ export default function CreateEvent({
             {seriesOfEvent.map((event,index) => {
               return (
                 <div>
-                  {event.title} ---- {event.description} ---- breaks when trying to put the date?
+                  {event.title} ---- {event.description} ---- 
+                  <Button colorScheme="teal" variant="solid" onClick={() => handleDelete(event.title,event.description,event.startDate)}>
+                    Delete this event
+                  </Button>
                 </div>
               )
             })}
