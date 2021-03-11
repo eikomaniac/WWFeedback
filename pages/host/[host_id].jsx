@@ -37,16 +37,21 @@ export default function Home() {
   const [surveysList, setSurveysList] = useList('event', 'surveys');
   const [techIssuesList, setTechIssuesList] = useList('event', 'techIssues');
   const [moodList, setMoodList] = useList('event', 'mood');
+  
+  const [avgList, setAvgList] = useList('event', 'avg6'); // change number to switch to fresh data
+  const [timeList, setTimeList] = useList('event', 'time6');
+  const [attendeeList, setAttendeeList] = useList('event', 'attendee2');
+  const [attendeeTimeList, setAttendeeTimeList] = useList('event', 'attendeeTime2');
 
-  const [mood, setMood] = useState(0.5);
+  const [mood, setMood] = useState(0);
+  const [attendance, setAttendance] = useState(0);
 
   const [joined, joinedClient] = usePresence('event', 'joined');
 
-  const data = {
-    labels: ['-10', '-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1'],
+  const attendeeData = {
+    labels: attendeeTimeList,
     datasets: [
       {
-        label: 'My First dataset',
         fill: false,
         lineTension: 0.1,
         backgroundColor: 'rgba(75,192,192,0.4)',
@@ -64,17 +69,128 @@ export default function Home() {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+        data: attendeeList
       },
     ],
   };
 
+  const moodData = {
+    type: 'time',
+    labels: timeList,
+    datasets: [
+      {
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: 'rgba(75,192,192,0.4)',
+        borderColor: 'rgba(75,192,192,1)',
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data: avgList
+      },
+    ],
+  };
+
+  const attendeeOptions = {
+    scales: {
+      yAxes: [{
+          ticks: {
+            min: 0,
+            stepSize: 1
+          }
+      }],
+      xAxes: [{
+        type: 'time',
+        distribution: 'linear',
+        time: {
+          tooltipFormat: 'h:mm a',
+          displayFormats: {
+              minute: 'h:mm a'
+          }
+        },
+        ticks: {
+          display: true,
+          autoSkip: true,
+          maxTicksLimit: 5
+        }
+      }]
+    },
+    legend: {
+      display: false
+    }
+  };
+
+  const moodOptions = {
+    scales: {
+      yAxes: [{
+          ticks: {
+            suggestedMin: -1,
+            suggestedMax: 1
+          }
+      }],
+      xAxes: [{
+        type: 'time',
+        distribution: 'linear',
+        time: {
+            tooltipFormat: 'h:mm a',
+            displayFormats: {
+                minute: 'h:mm a'
+            }
+        },
+        ticks: {
+          display: true,
+          autoSkip: true,
+          maxTicksLimit: 5
+        }
+      }]
+    },
+    legend: {
+      display: false
+    }
+  };
+
   useInterval(() => {
+    var time = new Date();
+
+    var attendeeNum = Object.keys(joined).length
+    if (attendeeNum != attendance) {
+      setAttendeeList?.push(attendance);
+      setAttendeeTimeList?.push(time);
+      setAttendance(attendeeNum);
+    }
+
+    console.log('average:', avgList);
+    console.log('time:', timeList);
+    console.log('mood', moodList);
+
     if (moodList.length > 0) {
       // ! do mood stuff here
-      console.log(moodList);
-      setMood(moodList[0]); // ? takes last result, not average
-      setMoodList.delete(0);
+      var len = avgList.length;
+
+      if (len == 0) {
+        setAvgList?.push(moodList[0].toFixed(2));
+        setMoodList?.delete(0);
+        setMood(moodList[0]);
+        setTimeList?.push(time);
+      }
+      else {
+        var average = ( avgList[len - 1] * 0.5 + moodList[0] * 0.5 ) // this average gives the most recent mood score a 50% weighting
+        // var average = ( avgList[len - 1] * len + moodList[0] ) / (len + 1) // this average would weight all the mood scores equally 
+        setAvgList?.push(average.toFixed(2));
+        setMoodList?.delete(0);
+        setMood(average);
+        setTimeList?.push(time);
+      }
     }
     if (techIssuesList.length > 0) {
       toast({
@@ -143,7 +259,7 @@ export default function Home() {
                 Mood Over Time
               </Text>
             </Center>
-            <Line height="200px" data={data} />
+            <Line height="200px" data={moodData} options={moodOptions} />
           </Box>
           <Box borderRadius="lg" bg="#2D3748" padding="10px">
             <Center>
@@ -157,7 +273,7 @@ export default function Home() {
                 Attendees Over Time
               </Text>
             </Center>
-            <Line height="200px" data={data} />
+            <Line height="200px" data={attendeeData} options={attendeeOptions}/>
           </Box>
           <Box borderRadius="lg" bg="#2D3748" padding="10px">
             <Center>

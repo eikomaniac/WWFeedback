@@ -64,9 +64,7 @@ export default function Home() {
       });
       const result = res.data;
       console.log(result);
-      setMood(mood + result);
-      // ! send the mood/result (not sure which is which) to roomservice
-      // setMoodList.push(?);
+      setMoodList.push(result);
     } catch (err) {
       console.log('failed');
     }
