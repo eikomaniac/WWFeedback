@@ -121,7 +121,8 @@ export default function Home() {
         ticks: {
           display: true,
           autoSkip: true,
-          maxTicksLimit: 5
+          maxTicksLimit: 5,
+          min: Date.now() - (1000 * 60 * 60)
         }
       }]
     },
@@ -150,7 +151,8 @@ export default function Home() {
         ticks: {
           display: true,
           autoSkip: true,
-          maxTicksLimit: 5
+          maxTicksLimit: 5,
+          min: Date.now() - (1000 * 60 * 60)
         }
       }]
     },
