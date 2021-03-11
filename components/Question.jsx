@@ -46,44 +46,6 @@ export default function Layout({
       <Flex>
         <FormLabel />
         {question.label}
-        <div style={{ marginTop: 3, marginLeft: 10, display: 'inline-block' }}>
-          <FaChevronUp
-            onClick={() => {
-              const temp = { ...template };
-              const tempQuestion = temp.questions[questionNo];
-              temp.questions.splice(questionNo, 1);
-              temp.questions.splice(questionNo - 1, 0, tempQuestion);
-              setTemplate(temp);
-            }}
-            style={{ cursor: 'pointer', visibility: questionNo === 0 ? 'hidden' : 'visible' }}
-          />
-          {questionNo !== template.questions.length - 1 && (
-            <FaChevronDown
-              onClick={() => {
-                const temp = { ...template };
-                const tempQuestion = temp.questions[questionNo];
-                temp.questions.splice(questionNo, 1);
-                temp.questions.splice(questionNo + 1, 0, tempQuestion);
-                setTemplate(temp);
-              }}
-              style={{ cursor: 'pointer' }}
-            />
-          )}
-        </div>
-        <div>
-          {template.questions.length > 1 && (
-            <IconButton
-              onClick={() => {
-                const temp = { ...template };
-                temp.questions.splice(questionNo, 1);
-                setTemplate(temp);
-              }}
-              marginLeft="10px"
-              icon={<BsFillTrashFill />}
-              colorScheme="red"
-            />
-          )}
-        </div>
       </Flex>
       {question.type === 'input' && (
         <Input
@@ -94,7 +56,7 @@ export default function Layout({
         />
       )}
       {question.type === 'radio' && (
-        <RadioGroup>
+        <RadioGroup value={question.answer} onChange={(val) => { updateTemplate(val, questionNo, 'answer') }}>
           <HStack spacing="24px">
             {question.optionGroup.map((radio, radioNo) => (
               <>
@@ -104,26 +66,12 @@ export default function Layout({
                 >
                   {((question.optionGroup.length <= 2 || !(deleteNo[0] === questionNo && deleteNo[1] === radioNo)) && (
                     <Radio
-                      isChecked
-                      isDisabled
+                      value={question.optionGroup[radioNo]}
                       style={{ cursor: question.optionGroup.length <= 2 ? 'auto' : 'pointer', marginTop: 5, margin: 8 }}
                     >
                       {question.optionGroup[radioNo]}
                     </Radio>
-                  )) || (
-                    <IconButton
-                      onClick={() => {
-                        const temp = { ...template };
-                        temp.questions[questionNo].optionGroup.splice(radioNo, 1);
-                        setTemplate(temp);
-                      }}
-                      icon={<BsFillTrashFill />}
-                      size="sm"
-                      style={{
-                        color: '#FEB2B2', fontSize: 15, margin: 0, backgroundColor: 'rgb(0, 0, 0, 0)', boxShadow: 'none',
-                      }}
-                    />
-                  )}
+                  ))}
                 </div>
               </>
             ))}
@@ -139,7 +87,15 @@ export default function Layout({
             <Spacer />
             {question.sliderGroup[2]}
           </Flex>
-          <Slider defaultValue={50}>
+          <Slider onChangeEnd={(val) => {
+            if (val > 2 / 3) {
+              // ! do later
+            } else if (val < 1 / 3 && val < 2 / 3) {
+              
+            } else {
+              
+            }
+          }} defaultValue={50}>
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
@@ -158,7 +114,6 @@ export default function Layout({
                 {((question.optionGroup.length <= 1 || !(deleteNo[0] === questionNo && deleteNo[1] === checkboxNo)) && (
                   <Checkbox
                     defaultIsChecked
-                    isDisabled
                     style={{ cursor: question.optionGroup.length <= 1 ? 'auto' : 'pointer', marginTop: 5, margin: 8 }}
                   />
                 )) || (

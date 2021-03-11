@@ -91,6 +91,8 @@ const ourTemplate = {
 export default function CreateEvent({
   setPageView,
 }) {
+  const [tabIndex, setTabIndex] = useState(0);
+
   const [template, setTemplate] = useState(ourTemplate);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -179,7 +181,7 @@ export default function CreateEvent({
       </Center>
       <SimpleGrid columns={{ sm: 1, lg: 2 }} spacing="20px">
         <Box ml="20px">
-          <Tabs>
+          <Tabs index={tabIndex} onChange={(i) => setTabIndex(i)}>
             <TabList>
               {tabs.map((tab) => <Tab>{tab}</Tab>)}
               <Tab onClick={() => setTabs((t) => [...t, t.length + 1])}>+</Tab>
@@ -216,12 +218,12 @@ export default function CreateEvent({
               {['Session', 'Series', 'Project'].map((type, index) => (
                 <MenuItem key={index} onClick={() => {
                   setEventType(type)
-                  if(type==='Project'){
+                  if(type==='Session'){
                     setIsProject(true)
                     setIsSeries(false)
                     setIsSession(false)
                   }
-                  if(type==='Session'){
+                  if(type==='Project'){
                     setIsProject(false)
                     setIsSeries(false)
                     setIsSession(true)
@@ -288,8 +290,8 @@ export default function CreateEvent({
             {seriesOfEvent.map((event,index) => {
               return (
                 <div>
-                  {event.title} ---- {event.description} ---- {new Intl.DateTimeFormat('default', 
-                    {year: 'numeric', month: 'long',day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(event.date)} -----
+                  {event.title} | {event.description} | {new Intl.DateTimeFormat('default', 
+                    {year: 'numeric', month: 'long',day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(event.date)} |&nbsp;
                   <Button colorScheme="teal" variant="solid" onClick={() => handleDelete(event.title,event.description,event.startDate)}>
                     Delete this event
                   </Button>
@@ -306,8 +308,16 @@ export default function CreateEvent({
             <MenuList>
               {['General', '+ Custom'].map((type, index) => (
                 <MenuItem key={index} onClick={() => {
-                  if(index===1) setTemplate({...placeholderQuestion})
-                  if(index===0) setTemplate(ourTemplate) 
+                  if (index === 1) {
+                    setTemplate({ title: '', questions: [{ ...placeholderQuestion }] });
+                    setTabs(['1']);
+                    setTabIndex(0);
+                  }
+                  if (index === 0) {
+                    setTemplate(ourTemplate);
+                    setTabs(['1']);
+                    setTabIndex(0);
+                  }
                 }}>{type}</MenuItem>
               ))}
             </MenuList>
@@ -318,22 +328,26 @@ export default function CreateEvent({
           <a id="export-template" style={{ display: 'none' }} />
           <Button variant="outline" onClick={() => exportTemplate()}>Export</Button>
           <br />
-          <Button colorScheme="teal" variant="solid" onClick={onOpen}>
+          <br />
+          <Button colorScheme="teal" variant="solid" size="lg" onClick={() => setTimeout(onOpen, 200)}>
             Schedule Event
           </Button>          
-          <Modal isOpen={isOpen} onClose={onClose}>
+          <Modal isOpen={isOpen} onClose={() => setPageView('home')}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Your event codes</ModalHeader>
+              <ModalHeader><Center>{isSession && 'Session' || isSeries && 'Series' || isProject && 'Project'} Successfully Created</Center></ModalHeader>
+              <Center style={{ color: 'grey', marginTop: -15 }}><i>Write these down!</i></Center>
             <ModalCloseButton />
-            <ModalBody>
-              Host Code: 384723 <br/>
-              Attendee Code: 945855
+            <ModalBody style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 50 }}>Host Code</div>
+              <div style={{ fontSize: 30 }}>384723</div><br />
+              <div style={{ fontSize: 50, marginTop: 15 }}>Join Code</div>
+              <div style={{ fontSize: 30 }}>945855</div>
             </ModalBody>
 
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={onClose}>
-                Close
+              <Button colorScheme="blue" mr={3} onClick={() => setPageView('home')}>
+                Exit
               </Button>
             </ModalFooter>
           </ModalContent>

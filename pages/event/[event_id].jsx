@@ -48,9 +48,48 @@ export default function Home() {
   const [template, setTemplate] = useState({
     title: '',
     questions: [
-      { ...placeholderQuestion },
+      {
+        type: 'radio',
+        label: 'Is the content engaging?',
+        placeholder: '',
+        optionGroup: ['Yes','No'],
+        sliderGroup: ['', '', ''],
+        helper: 'Please select an option.',
+        required: true,
+        answer: '',
+      },
+      {
+        type: 'radio',
+        label: 'Are you hearing the presenter well?',
+        placeholder: '',
+        optionGroup: ['Yes','No'],
+        sliderGroup: ['', '', ''],
+        helper: 'Please select an option.',
+        required: true,
+        answer: '',
+      },
+      {
+        type: 'slider',
+        label: 'How well can you see the presented content?',
+        placeholder: '',
+        optionGroup: ['',''],
+        sliderGroup: ['Not at all', 'Can see it, but not clearly', 'Can clearly see it'],
+        helper: 'Please move the slider to indicate how well you can see the presented content.',
+        required: true,
+        answer: '',
+      },
+      {
+        type: 'input',
+        label: 'Describe the way you feel about the content.',
+        placeholder: '',
+        optionGroup: ['',''],
+        sliderGroup: ['', '', ''],
+        helper: 'Use the text area to indicate how you feel.',
+        required: true,
+        answer: '',
+      },
     ],
-  });
+});
 
   const onSendFeedback = async () => {
     if (!setSurveysList) return;
@@ -82,7 +121,7 @@ export default function Home() {
 
   return (
     <Layout title="Event">
-      <Center width="100vw" height="50px" background="#2D3748">
+      <Center width="calc(100vw-10px)" height="50px" background="#2D3748">
         <Text
           bgGradient="linear(to-l, #7928CA,#FF0080)"
           bgClip="text"
@@ -113,7 +152,7 @@ export default function Home() {
           <BiSad color="red" fontSize="100px" style={{ cursor: 'pointer', opacity: [undefined, -1].includes(selectedMood) ? 1 : 0.3 }} onClick={() => sendMood(-1)} />
         </Center>
       </Box>
-      <SimpleGrid columns={{ sm: 1, lg: 2 }} spacing="20px">
+      <SimpleGrid columns={{ sm: 1, lg: 2 }} spacing="10px">
         <Box margin="10px" borderRadius="lg" bg="#2D3748" padding="10px">
           <Text
             bgGradient="linear(to-l, #7928CA,#FF0080)"
@@ -158,7 +197,7 @@ export default function Home() {
               </ModalBody>
 
               <ModalFooter>
-                <Button disabled={!techIssue} colorScheme="blue" mr={3} onClick={() => setTechIssuesList.push(techIssue)}>
+                <Button disabled={!techIssue} colorScheme="blue" mr={3} onClick={() => { setTechIssuesList.push(techIssue); setTechIssueModal(false); }}>
                   Send Issue
                 </Button>
                 <Button variant="outline" onClick={() => setTechIssueModal(false)}>Cancel</Button>

@@ -18,11 +18,10 @@ const DatePicker = ({
   showPopperArrow = false,
   ...props
 }: Props ) => {
-  const isLight = useColorMode().colorMode==='light';//you can check what theme you are using right now however you want
   return (
     // if you don't want to use chakra's colors or you just wwant to use the original ones, 
     // set className to "light-theme-original" ↓↓↓↓
-    <div className={isLight?"light-theme":"dark-theme"}>
+    <div className="dark-theme">
       <ReactDatePicker
         selected={selectedDate}
         onChange={onChange}
