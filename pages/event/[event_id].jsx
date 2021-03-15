@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useList, usePresence } from '@roomservice/react';
 import {
@@ -12,6 +13,7 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import { Line } from 'react-chartjs-2';
+import { AiOutlineLeft } from 'react-icons/ai';
 import { FaPlus } from 'react-icons/fa';
 import {
   CgSmileMouthOpen, CgSmile, CgSmileNeutral, CgSmileSad,
@@ -33,17 +35,20 @@ const placeholderQuestion = {
   answer: '',
 };
 
+const test = 'event12398u123';
+
 export default function Home() {
+  const router = useRouter();
   const [selectedMood, setSelectedMood] = useState();
   const [tabs, setTabs] = useState(['1']);
   const [techIssue, setTechIssue] = useState();
   const [techIssueModal, setTechIssueModal] = useState(false);
 
-  const [surveysList, setSurveysList] = useList('event', 'surveys');
-  const [techIssuesList, setTechIssuesList] = useList('event', 'techIssues');
-  const [moodList, setMoodList] = useList('event', 'mood');
+  const [surveysList, setSurveysList] = useList(test, 'surveys');
+  const [techIssuesList, setTechIssuesList] = useList(test, 'techIssues');
+  const [moodList, setMoodList] = useList(test, 'mood');
 
-  const [joined, joinedClient] = usePresence('event', 'joined');
+  const [joined, joinedClient] = usePresence(test, 'joined');
 
   const [template, setTemplate] = useState({
     title: '',
@@ -52,7 +57,7 @@ export default function Home() {
         type: 'radio',
         label: 'Is the content engaging?',
         placeholder: '',
-        optionGroup: ['Yes','No'],
+        optionGroup: ['Yes', 'No'],
         sliderGroup: ['', '', ''],
         helper: 'Please select an option.',
         required: true,
@@ -62,7 +67,7 @@ export default function Home() {
         type: 'radio',
         label: 'Are you hearing the presenter well?',
         placeholder: '',
-        optionGroup: ['Yes','No'],
+        optionGroup: ['Yes', 'No'],
         sliderGroup: ['', '', ''],
         helper: 'Please select an option.',
         required: true,
@@ -72,7 +77,7 @@ export default function Home() {
         type: 'slider',
         label: 'How well can you see the presented content?',
         placeholder: '',
-        optionGroup: ['',''],
+        optionGroup: ['', ''],
         sliderGroup: ['Not at all', 'Can see it, but not clearly', 'Can clearly see it'],
         helper: 'Please move the slider to indicate how well you can see the presented content.',
         required: true,
@@ -82,14 +87,14 @@ export default function Home() {
         type: 'input',
         label: 'Describe the way you feel about the content.',
         placeholder: '',
-        optionGroup: ['',''],
+        optionGroup: ['', ''],
         sliderGroup: ['', '', ''],
         helper: 'Use the text area to indicate how you feel.',
         required: true,
         answer: '',
       },
     ],
-});
+  });
 
   const onSendFeedback = async () => {
     if (!setSurveysList) return;
@@ -122,6 +127,16 @@ export default function Home() {
   return (
     <Layout title="Event">
       <Center width="calc(100vw-10px)" height="50px" background="#2D3748">
+        <Button
+          size="sm"
+          leftIcon={<AiOutlineLeft />}
+          variant="ghost"
+          color="grey"
+          onClick={() => router.push('/')}
+        >
+          Back
+        </Button>
+&nbsp;
         <Text
           bgGradient="linear(to-l, #7928CA,#FF0080)"
           bgClip="text"

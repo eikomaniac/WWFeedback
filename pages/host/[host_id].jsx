@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import {
-  Box, Center, SimpleGrid, Text, useToast,
+  Box, Center, SimpleGrid, Text, useToast, Button,
 } from '@chakra-ui/react';
 import { useList, usePresence } from '@roomservice/react';
 import { Line } from 'react-chartjs-2';
+import { AiOutlineLeft } from 'react-icons/ai';
 import { VscSmiley } from 'react-icons/vsc';
 
 import {
@@ -31,22 +33,25 @@ const useInterval = (callback, delay) => {
   }, [delay]);
 };
 
+const test = 'event123';
+
 export default function Home() {
+  const router = useRouter();
   const toast = useToast();
 
-  const [surveysList, setSurveysList] = useList('event', 'surveys');
-  const [techIssuesList, setTechIssuesList] = useList('event', 'techIssues');
-  const [moodList, setMoodList] = useList('event', 'mood');
-  
-  const [avgList, setAvgList] = useList('event', 'avg6'); // change number to switch to fresh data
-  const [timeList, setTimeList] = useList('event', 'time6');
-  const [attendeeList, setAttendeeList] = useList('event', 'attendee2');
-  const [attendeeTimeList, setAttendeeTimeList] = useList('event', 'attendeeTime2');
+  const [surveysList, setSurveysList] = useList(test, 'surveys');
+  const [techIssuesList, setTechIssuesList] = useList(test, 'techIssues');
+  const [moodList, setMoodList] = useList(test, 'mood');
+
+  const [avgList, setAvgList] = useList(test, 'avg6'); // change number to switch to fresh data
+  const [timeList, setTimeList] = useList(test, 'time6');
+  const [attendeeList, setAttendeeList] = useList(test, 'attendee2');
+  const [attendeeTimeList, setAttendeeTimeList] = useList(test, 'attendeeTime2');
 
   const [mood, setMood] = useState(0);
   const [attendance, setAttendance] = useState(0);
 
-  const [joined, joinedClient] = usePresence('event', 'joined');
+  const [joined, joinedClient] = usePresence('event2', 'joined');
 
   const attendeeData = {
     labels: attendeeTimeList,
@@ -69,7 +74,7 @@ export default function Home() {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: attendeeList
+        data: attendeeList,
       },
     ],
   };
@@ -96,7 +101,7 @@ export default function Home() {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: avgList
+        data: avgList,
       },
     ],
   };
@@ -104,10 +109,10 @@ export default function Home() {
   const attendeeOptions = {
     scales: {
       yAxes: [{
-          ticks: {
-            min: 0,
-            stepSize: 1
-          }
+        ticks: {
+          min: 0,
+          stepSize: 1,
+        },
       }],
       xAxes: [{
         type: 'time',
@@ -115,56 +120,56 @@ export default function Home() {
         time: {
           tooltipFormat: 'h:mm a',
           displayFormats: {
-              minute: 'h:mm a'
-          }
+            minute: 'h:mm a',
+          },
         },
         ticks: {
           display: true,
           autoSkip: true,
           maxTicksLimit: 5,
-          min: Date.now() - (1000 * 60 * 60)
-        }
-      }]
+          min: Date.now() - (1000 * 60 * 60),
+        },
+      }],
     },
     legend: {
-      display: false
-    }
+      display: false,
+    },
   };
 
   const moodOptions = {
     scales: {
       yAxes: [{
-          ticks: {
-            suggestedMin: -1,
-            suggestedMax: 1
-          }
+        ticks: {
+          suggestedMin: -1,
+          suggestedMax: 1,
+        },
       }],
       xAxes: [{
         type: 'time',
         distribution: 'linear',
         time: {
-            tooltipFormat: 'h:mm a',
-            displayFormats: {
-                minute: 'h:mm a'
-            }
+          tooltipFormat: 'h:mm a',
+          displayFormats: {
+            minute: 'h:mm a',
+          },
         },
         ticks: {
           display: true,
           autoSkip: true,
           maxTicksLimit: 5,
-          min: Date.now() - (1000 * 60 * 60)
-        }
-      }]
+          min: Date.now() - (1000 * 60 * 60),
+        },
+      }],
     },
     legend: {
-      display: false
-    }
+      display: false,
+    },
   };
 
   useInterval(() => {
-    var time = new Date();
+    const time = new Date();
 
-    var attendeeNum = Object.keys(joined).length
+    const attendeeNum = Object.keys(joined).length;
     if (attendeeNum != attendance) {
       setAttendeeList?.push(attendance);
       setAttendeeTimeList?.push(time);
@@ -177,17 +182,16 @@ export default function Home() {
 
     if (moodList.length > 0) {
       // ! do mood stuff here
-      var len = avgList.length;
+      const len = avgList.length;
 
       if (len == 0) {
         setAvgList?.push(moodList[0].toFixed(2));
         setMoodList?.delete(0);
         setMood(moodList[0]);
         setTimeList?.push(time);
-      }
-      else {
-        var average = ( avgList[len - 1] * 0.5 + moodList[0] * 0.5 ) // this average gives the most recent mood score a 50% weighting
-        // var average = ( avgList[len - 1] * len + moodList[0] ) / (len + 1) // this average would weight all the mood scores equally 
+      } else {
+        const average = (avgList[len - 1] * 0.5 + moodList[0] * 0.5); // this average gives the most recent mood score a 50% weighting
+        // var average = ( avgList[len - 1] * len + moodList[0] ) / (len + 1) // this average would weight all the mood scores equally
         setAvgList?.push(average.toFixed(2));
         setMoodList?.delete(0);
         setMood(average);
@@ -216,6 +220,16 @@ export default function Home() {
   return (
     <Layout title="Host View">
       <Center width="100vw" height="50px" background="#2D3748">
+        <Button
+          size="sm"
+          leftIcon={<AiOutlineLeft />}
+          variant="ghost"
+          color="grey"
+          onClick={() => router.push('/')}
+        >
+          Back
+        </Button>
+&nbsp;
         <Text
           bgGradient="linear(to-l, #7928CA,#FF0080)"
           bgClip="text"
@@ -275,7 +289,7 @@ export default function Home() {
                 Attendees Over Time
               </Text>
             </Center>
-            <Line height="200px" data={attendeeData} options={attendeeOptions}/>
+            <Line height="200px" data={attendeeData} options={attendeeOptions} />
           </Box>
           <Box borderRadius="lg" bg="#2D3748" padding="10px">
             <Center>

@@ -4,6 +4,7 @@ import { FaPlus } from 'react-icons/fa';
 import {
   BsChevronDown,
 } from 'react-icons/bs';
+
 import {
   Button,
   SimpleGrid,
@@ -27,12 +28,12 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
-import {useDisclosure} from '@chakra-ui/react'
-import DatePicker from './DatePicker.tsx'
 import filenamify from 'filenamify';
+import DatePicker from './DatePicker.tsx';
 import QuestionTemplate from './QuestionTemplate';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 
 import Title from './Title';
 
@@ -47,46 +48,46 @@ const placeholderQuestion = {
 };
 
 const ourTemplate = {
-    title: '',
-    questions: [
-      {
-        type: 'radio',
-        label: 'Is the content engaging?',
-        placeholder: '',
-        optionGroup: ['Yes','No'],
-        sliderGroup: ['', '', ''],
-        helper: 'Please select an option.',
-        required: true,
-      },
-      {
-        type: 'radio',
-        label: 'Are you hearing the presenter well?',
-        placeholder: '',
-        optionGroup: ['Yes','No'],
-        sliderGroup: ['', '', ''],
-        helper: 'Please select an option.',
-        required: true,
-      },
-      {
-        type: 'slider',
-        label: 'How well can you see the presented content?',
-        placeholder: '',
-        optionGroup: ['',''],
-        sliderGroup: ['Not at all', 'Can see it, but not clearly', 'Can clearly see it'],
-        helper: 'Please move the slider to indicate how well you can see the presented content.',
-        required: true,
-      },
-      {
-        type: 'input',
-        label: 'Describe the way you feel about the content.',
-        placeholder: '',
-        optionGroup: ['',''],
-        sliderGroup: ['', '', ''],
-        helper: 'Use the text area to indicate how you feel.',
-        required: true,
-      },
-    ],
-}
+  title: '',
+  questions: [
+    {
+      type: 'radio',
+      label: 'Is the content engaging?',
+      placeholder: '',
+      optionGroup: ['Yes', 'No'],
+      sliderGroup: ['', '', ''],
+      helper: 'Please select an option.',
+      required: true,
+    },
+    {
+      type: 'radio',
+      label: 'Are you hearing the presenter well?',
+      placeholder: '',
+      optionGroup: ['Yes', 'No'],
+      sliderGroup: ['', '', ''],
+      helper: 'Please select an option.',
+      required: true,
+    },
+    {
+      type: 'slider',
+      label: 'How well can you see the presented content?',
+      placeholder: '',
+      optionGroup: ['', ''],
+      sliderGroup: ['Not at all', 'Can see it, but not clearly', 'Can clearly see it'],
+      helper: 'Please move the slider to indicate how well you can see the presented content.',
+      required: true,
+    },
+    {
+      type: 'input',
+      label: 'Describe the way you feel about the content.',
+      placeholder: '',
+      optionGroup: ['', ''],
+      sliderGroup: ['', '', ''],
+      helper: 'Use the text area to indicate how you feel.',
+      required: true,
+    },
+  ],
+};
 
 export default function CreateEvent({
   setPageView,
@@ -97,7 +98,7 @@ export default function CreateEvent({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tabs, setTabs] = useState(['1']);
-  const [eventType, setEventType] = useState('Session')
+  const [eventType, setEventType] = useState('Session');
 
   const [isSession, setIsSession] = useState(true);
   const [isSeries, setIsSeries] = useState(false);
@@ -105,14 +106,14 @@ export default function CreateEvent({
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const [newSeriesAdded, setNewSeriesAdded] = useState(false)
-  const [seriesOfEvent, setSeriesOfEvent] = useState([])
+  const [newSeriesAdded, setNewSeriesAdded] = useState(false);
+  const [seriesOfEvent, setSeriesOfEvent] = useState([]);
 
   useEffect(() => {
-    setTitle('')
-    setDescription('')
-    setStartDate(null)
-  },[newSeriesAdded, seriesOfEvent])
+    setTitle('');
+    setDescription('');
+    setStartDate(null);
+  }, [newSeriesAdded, seriesOfEvent]);
 
   const onReaderLoad = (e) => {
     const obj = JSON.parse(e.target.result);
@@ -135,32 +136,28 @@ export default function CreateEvent({
     anchor.click();
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleAdd = (someTitle, someDescription, someStartDate) => {
+    const isTitleEmpty = (someTitle === '');
+    const isDescriptionEmpty = (someDescription === '');
+    const isStartDateNull = (someStartDate === null);
 
-    const isTitleEmpty = (someTitle === '')
-    const isDescriptionEmpty = (someDescription === '')
-    const isStartDateNull = (someStartDate === null)
+    const allGood = (!isTitleEmpty && !isDescriptionEmpty && !isStartDateNull);
 
-    const allGood = (!isTitleEmpty && !isDescriptionEmpty && !isStartDateNull)
-
-    if(allGood){
-      setNewSeriesAdded(!newSeriesAdded)
-      const newList = seriesOfEvent.concat({'title': someTitle, 'description':someDescription, 'date':someStartDate})
-      setSeriesOfEvent(newList)
+    if (allGood) {
+      setNewSeriesAdded(!newSeriesAdded);
+      const newList = seriesOfEvent.concat({ title: someTitle, description: someDescription, date: someStartDate });
+      setSeriesOfEvent(newList);
     }
 
-    console.log(seriesOfEvent)
-
-  }
+    console.log(seriesOfEvent);
+  };
 
   const handleDelete = (someTitle, someDescription, someStartDate) => {
-
-    const newList = seriesOfEvent.filter(element => element.title !== someTitle)
-    setSeriesOfEvent(newList)
-
-  }
+    const newList = seriesOfEvent.filter((element) => element.title !== someTitle);
+    setSeriesOfEvent(newList);
+  };
 
   return (
     <div>
@@ -216,24 +213,29 @@ export default function CreateEvent({
             </MenuButton>
             <MenuList>
               {['Session', 'Series', 'Project'].map((type, index) => (
-                <MenuItem key={index} onClick={() => {
-                  setEventType(type)
-                  if(type==='Session'){
-                    setIsProject(true)
-                    setIsSeries(false)
-                    setIsSession(false)
-                  }
-                  if(type==='Project'){
-                    setIsProject(false)
-                    setIsSeries(false)
-                    setIsSession(true)
-                  }
-                  if(type==='Series'){
-                    setIsProject(false)
-                    setIsSeries(true)
-                    setIsSession(false)
-                  }
-                }}>{type}</MenuItem>
+                <MenuItem
+                  key={index}
+                  onClick={() => {
+                    setEventType(type);
+                    if (type === 'Session') {
+                      setIsSession(true);
+                      setIsSeries(false);
+                      setIsProject(false);
+                    }
+                    if (type === 'Series') {
+                      setIsSession(false);
+                      setIsSeries(true);
+                      setIsProject(false);
+                    }
+                    if (type === 'Project') {
+                      setIsSession(false);
+                      setIsSeries(false);
+                      setIsProject(true);
+                    }
+                  }}
+                >
+                  {type}
+                </MenuItem>
               ))}
             </MenuList>
           </Menu>
@@ -250,55 +252,105 @@ export default function CreateEvent({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          {isProject && (<>
-              <br /> <br />
-              <DatePicker selected={startDate} showTimeSelect timeFormat="HH:mm"
-              timeIntervals={15}
-              timeCaption="time"
-              dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
-              <br /> <br />
-              <DatePicker selected={endDate} showTimeSelect timeFormat="HH:mm"
-              timeIntervals={15}
-              timeCaption="time"
-              dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Choose an ending date " onChange={date => setEndDate(date)} />
-              <br /> <br />
-              </>
-            )
-          }
-          {isSession && (<>
-            <br /> <br />
-              <DatePicker selected={startDate} showTimeSelect timeFormat="HH:mm"
-              timeIntervals={15}
-              timeCaption="time"
-              dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Choose a date" onChange={date => setStartDate(date)} />
-              <br /> <br />
-              </>
-            )
-          }
-          {isSeries && (<>
-            <br /> <br />
-            <DatePicker selected={startDate} showTimeSelect timeFormat="HH:mm"
-              timeIntervals={15}
-              timeCaption="time"
-              dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Choose a starting date " onChange={date => setStartDate(date)} />
-            <br />
-            <Button colorScheme="teal" variant="solid" onClick={() => handleAdd(title, description, startDate)}>
-              Add new event
-            </Button>
-            <br/> <br />
-            Current events: <br />
-            {seriesOfEvent.map((event,index) => {
-              return (
+          {isProject && (
+            <>
+              <br />
+              {' '}
+              <br />
+              <DatePicker
+                selected={startDate}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                timeCaption="time"
+                dateFormat="MMMM d, yyyy h:mm aa"
+                placeholderText="Choose a date"
+                onChange={(date) => setStartDate(date)}
+              />
+              <br />
+              {' '}
+              <br />
+            </>
+          )}
+          {isSession && (
+            <>
+              <br />
+              {' '}
+              <br />
+              <DatePicker
+                selected={startDate}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                timeCaption="time"
+                dateFormat="MMMM d, yyyy h:mm aa"
+                placeholderText="Choose a starting date "
+                onChange={(date) => setStartDate(date)}
+              />
+              <br />
+              {' '}
+              <br />
+              <DatePicker
+                selected={endDate}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                timeCaption="time"
+                dateFormat="MMMM d, yyyy h:mm aa"
+                placeholderText="Choose an ending date "
+                onChange={(date) => setEndDate(date)}
+              />
+              <br />
+              {' '}
+              <br />
+            </>
+          )}
+          {isSeries && (
+            <>
+              <br />
+              {' '}
+              <br />
+              <DatePicker
+                selected={startDate}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                timeCaption="time"
+                dateFormat="MMMM d, yyyy h:mm aa"
+                placeholderText="Choose a starting date "
+                onChange={(date) => setStartDate(date)}
+              />
+              <br />
+              <Button colorScheme="teal" variant="solid" onClick={() => handleAdd(title, description, startDate)}>
+                Add new event
+              </Button>
+              <br />
+              {' '}
+              <br />
+              Current events:
+              {' '}
+              <br />
+              {seriesOfEvent.map((event, index) => (
                 <div>
-                  {event.title} | {event.description} | {new Intl.DateTimeFormat('default', 
-                    {year: 'numeric', month: 'long',day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(event.date)} |&nbsp;
-                  <Button colorScheme="teal" variant="solid" onClick={() => handleDelete(event.title,event.description,event.startDate)}>
+                  {event.title}
+                  {' '}
+                  |
+                  {event.description}
+                  {' '}
+                  |
+                  {new Intl.DateTimeFormat('default',
+                    {
+                      year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit',
+                    }).format(event.date)}
+                  {' '}
+                  |&nbsp;
+                  <Button colorScheme="teal" variant="solid" onClick={() => handleDelete(event.title, event.description, event.startDate)}>
                     Delete this event
                   </Button>
-                  <br /><br />
+                  <br />
+                  <br />
                 </div>
-              )
-            })}
+              ))}
             </>
           )}
           <Menu>
@@ -307,18 +359,23 @@ export default function CreateEvent({
             </MenuButton>
             <MenuList>
               {['General', '+ Custom'].map((type, index) => (
-                <MenuItem key={index} onClick={() => {
-                  if (index === 1) {
-                    setTemplate({ title: '', questions: [{ ...placeholderQuestion }] });
-                    setTabs(['1']);
-                    setTabIndex(0);
-                  }
-                  if (index === 0) {
-                    setTemplate(ourTemplate);
-                    setTabs(['1']);
-                    setTabIndex(0);
-                  }
-                }}>{type}</MenuItem>
+                <MenuItem
+                  key={index}
+                  onClick={() => {
+                    if (index === 1) {
+                      setTemplate({ title: '', questions: [{ ...placeholderQuestion }] });
+                      setTabs(['1']);
+                      setTabIndex(0);
+                    }
+                    if (index === 0) {
+                      setTemplate(ourTemplate);
+                      setTabs(['1']);
+                      setTabIndex(0);
+                    }
+                  }}
+                >
+                  {type}
+                </MenuItem>
               ))}
             </MenuList>
           </Menu>
@@ -331,27 +388,34 @@ export default function CreateEvent({
           <br />
           <Button colorScheme="teal" variant="solid" size="lg" onClick={() => setTimeout(onOpen, 200)}>
             Schedule Event
-          </Button>          
+          </Button>
           <Modal isOpen={isOpen} onClose={() => setPageView('home')}>
-          <ModalOverlay />
-          <ModalContent>
-              <ModalHeader><Center>{isSession && 'Session' || isSeries && 'Series' || isProject && 'Project'} Successfully Created</Center></ModalHeader>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>
+                <Center>
+                  {isSession && 'Session' || isSeries && 'Series' || isProject && 'Project'}
+                  {' '}
+                  Successfully Created
+                </Center>
+              </ModalHeader>
               <Center style={{ color: 'grey', marginTop: -15 }}><i>Write these down!</i></Center>
-            <ModalCloseButton />
-            <ModalBody style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 50 }}>Host Code</div>
-              <div style={{ fontSize: 30 }}>384723</div><br />
-              <div style={{ fontSize: 50, marginTop: 15 }}>Join Code</div>
-              <div style={{ fontSize: 30 }}>945855</div>
-            </ModalBody>
+              <ModalCloseButton />
+              <ModalBody style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 50 }}>Host Code</div>
+                <div style={{ fontSize: 30 }}>945855</div>
+                <br />
+                <div style={{ fontSize: 50, marginTop: 15 }}>Join Code</div>
+                <div style={{ fontSize: 30 }}>384723</div>
+              </ModalBody>
 
-            <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={() => setPageView('home')}>
-                Exit
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+              <ModalFooter>
+                <Button colorScheme="blue" mr={3} onClick={() => setPageView('home')}>
+                  Exit
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </Box>
       </SimpleGrid>
     </div>

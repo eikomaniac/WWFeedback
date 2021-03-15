@@ -56,7 +56,7 @@ export default function Layout({
         />
       )}
       {question.type === 'radio' && (
-        <RadioGroup value={question.answer} onChange={(val) => { updateTemplate(val, questionNo, 'answer') }}>
+        <RadioGroup value={question.answer} onChange={(val) => { updateTemplate(val, questionNo, 'answer'); }}>
           <HStack spacing="24px">
             {question.optionGroup.map((radio, radioNo) => (
               <>
@@ -87,15 +87,18 @@ export default function Layout({
             <Spacer />
             {question.sliderGroup[2]}
           </Flex>
-          <Slider onChangeEnd={(val) => {
-            if (val > 2 / 3) {
-              // ! do later
-            } else if (val < 1 / 3 && val < 2 / 3) {
-              
-            } else {
-              
-            }
-          }} defaultValue={50}>
+          <Slider
+            onChange={(val) => {
+              if (val > 66) {
+                updateTemplate(question.sliderGroup[2], questionNo, 'answer');
+              } else if (val > 33 && val <= 66) {
+                updateTemplate(question.sliderGroup[1], questionNo, 'answer');
+              } else {
+                updateTemplate(question.sliderGroup[0], questionNo, 'answer');
+              }
+            }}
+            defaultValue={50}
+          >
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>

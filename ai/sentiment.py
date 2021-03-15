@@ -1,6 +1,4 @@
-import sys, os
-import nltk
-nltk.download('vader_lexicon')
+import sys
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 

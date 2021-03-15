@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useState } from 'react';
 import {
@@ -12,18 +13,22 @@ export default function JoinEvent({
 }) {
   const [loadingEvent, setLoadingEvent] = useState(false);
   const toast = useToast();
+  const router = useRouter();
 
   const onJoinCodeEntered = async (code) => {
     setLoadingEvent(true);
 
     try {
-      await axios.get('/api/v1/events', {
+      const res = await axios.get('/api/v1/events', {
         params: {
           id: code,
         },
       });
-
-      console.log('success');
+      if (res.data.event.type === 'host') {
+        router.push(`/host/${code}`);
+      } else if (res.data.event.type === 'join') {
+        router.push(`/event/${code}`);
+      }
     } catch (err) {
       toast({
         title: (<>
